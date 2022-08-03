@@ -19,6 +19,36 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ asset('adminassets/css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    @if (app()->currentLocale() == 'ar')
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+        body {
+            direction: rtl;
+            text-align: right;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .sidebar {
+            padding: 0
+        }
+
+        .sidebar .nav-item .nav-link {
+            text-align: right
+        }
+
+        .sidebar .nav-item .nav-link[data-toggle=collapse]::after {
+            float: left;
+            transform: rotate(180deg)
+        }
+
+        .ml-auto, .mx-auto {
+            margin-right: auto!important;
+            margin-left: unset!important;
+        }
+    </style>
+    @endif
+
     @yield('styles')
 </head>
 
@@ -31,11 +61,11 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/') }}">
+                <div class="sidebar-brand-icon">
+                    <i class="fas fa-heart"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">{{ env('APP_NAME') }}</div>
             </a>
 
             <!-- Divider -->
@@ -43,28 +73,88 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('admin.index') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    <span>{{ __('site.Dashboard') }}</span></a>
             </li>
 
             <!-- Divider -->
-            <hr class="sidebar-divider">
+            <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategory"
+                    aria-expanded="true" aria-controls="collapseCategory">
+                    <i class="fas fa-fw fa-tags"></i>
+                    <span>{{ __('site.Categories') }}</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseCategory" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
+                        <a class="collapse-item" href="buttons.html">{{ __('site.All Categories') }}</a>
+                        <a class="collapse-item" href="cards.html">Add New</a>
                     </div>
                 </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseServices"
+                    aria-expanded="true" aria-controls="collapseServices">
+                    <i class="fas fa-fw fa-heart"></i>
+                    <span>{{ __('site.Services') }}</span>
+                </a>
+                <div id="collapseServices" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="buttons.html">All Services</a>
+                        <a class="collapse-item" href="cards.html">Add New</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNews"
+                    aria-expanded="true" aria-controls="collapseNews">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>{{ __('site.News') }}</span>
+                </a>
+                <div id="collapseNews" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="buttons.html">All News</a>
+                        <a class="collapse-item" href="cards.html">Add New</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-shopping-cart"></i>
+                    <span>{{ __('site.Orders') }}</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-money-bill"></i>
+                    <span>{{ __('site.Payments') }}</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>{{ __('site.Users') }}</span></a>
             </li>
 
             <!-- Divider -->
@@ -96,6 +186,17 @@
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
+{{-- {{ app()->currentLocale() }} --}}
+                            @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                            @if (app()->currentLocale() != $localeCode)
+                            <li class="nav-item">
+                                <a class="nav-link" rel="alternate" hreflang="{{ $localeCode }}" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                                    <img width="25" src="{{ asset('adminassets/img/'.$properties['flag']) }}" alt="">
+                                </a>
+                            </li>
+                            @endif
+
+                            @endforeach
 
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                         <li class="nav-item dropdown no-arrow d-sm-none">
@@ -125,9 +226,9 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name??'' }}</span>
                                 <img class="img-profile rounded-circle"
-                                    src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}">
+                                    src="https://ui-avatars.com/api/?name={{ Auth::user()->name??'' }}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
